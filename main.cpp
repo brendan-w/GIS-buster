@@ -24,6 +24,7 @@ void detect( int, void* )
     bitwise_not(img, marked);
     distanceTransform(marked, marked, CV_DIST_L2, 3);
     normalize(marked, marked, 0.0, 1.0, NORM_MINMAX);
+    threshold(marked, marked, 0.75, 1.0, THRESH_BINARY);
 
     std::cout << "Found " << 0 << " blobs" << std::endl;
 

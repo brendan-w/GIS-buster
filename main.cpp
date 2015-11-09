@@ -11,50 +11,21 @@ using namespace cv;
 
 char* window_name = "Node Finder";
 
-int min_area;
-int max_area;
+int min_area = 1;
+int max_area = 500;
 
 Mat img;
 
 
 void detect( int, void* )
 {
-    SimpleBlobDetector::Params params;
-    params.filterByInertia     = false;
-    params.filterByConvexity   = false;
-    
-    //find only black
-    params.filterByColor       = true;
-    params.blobColor           = 0;
-
-    //look for circles
-    // params.filterByCircularity = false;
-    params.filterByCircularity = true;
-    params.minCircularity      = 0.1;
-    //I measured them to be about ~22 pixels in diameter
-    params.filterByArea        = true;
-    params.minArea             = (float) min_area; //314.0f + knob; //20 px diameter
-    params.maxArea             = (float) max_area; //530.0f + knob;  //26 px diameter
-
-    params.minDistBetweenBlobs = 35.0f;
-
-
-    std::cout << "Starting detection..." << std::endl;
-
-    SimpleBlobDetector detector(params);
-    vector<KeyPoint> keypoints;
-    detector.detect(img, keypoints);
-
-    std::cout << "Finished detection" << std::endl;
-    std::cout << "Found " << keypoints.size() << " blobs" << std::endl;
-
-    std::cout << "Writing image..." << std::endl;
-
     Mat marked;
-    drawKeypoints(img, keypoints, marked);
-    // imwrite("output.png", marked);
 
-    std::cout << "Finished image" << std::endl;
+    bitwise_not(img, marked);
+    distanceTransform(marked, marked, CV_DIST_L2, 3);
+    normalize(marked, marked, 0.0, 1.0, NORM_MINMAX);
+
+    std::cout << "Found " << 0 << " blobs" << std::endl;
 
     imshow(window_name, marked);
 }

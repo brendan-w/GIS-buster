@@ -31,16 +31,15 @@ void detect( int, void* )
     SimpleBlobDetector::Params params;
     params.filterByInertia     = false;
     params.filterByConvexity   = false;
-    //find only black
+    //find only white blobs
     params.filterByColor       = true;
-    params.blobColor           = 0;
+    params.blobColor           = 255;
     //look for circles
     params.filterByCircularity = true;
-    params.minCircularity      = 0.1;
-    //I measured them to be about ~22 pixels in diameter
+    params.minCircularity      = 0.4;
     params.filterByArea        = true;
-    params.minArea             = (float) min_area;
-    params.maxArea             = (float) max_area;
+    params.minArea             = 10.0; //(float) min_area;
+    params.maxArea             = 50.0; //(float) max_area;
 
     params.minDistBetweenBlobs = 1.0f;
 
@@ -50,7 +49,7 @@ void detect( int, void* )
     SimpleBlobDetector detector(params);
     vector<KeyPoint> keypoints;
     detector.detect(working, keypoints);
-    drawKeypoints(img, keypoints, marked);
+    drawKeypoints(working, keypoints, working);
 
     std::cout << "Found " << keypoints.size() << " blobs" << std::endl;
 

@@ -25,7 +25,7 @@ void detect( int, void* )
     bitwise_not(img, working);
     distanceTransform(working, working, CV_DIST_L2, 3);
     normalize(working, working, 0, 255, NORM_MINMAX, CV_8UC1);
-    threshold(working, working, 130, 255, THRESH_BINARY);
+    threshold(working, working, 110, 255, THRESH_BINARY);
 
 
     SimpleBlobDetector::Params params;
@@ -39,7 +39,7 @@ void detect( int, void* )
     params.minCircularity      = 0.1;
     params.filterByArea        = true;
     params.minArea             = 15.0; //(float) min_area;
-    params.maxArea             = 180.0; //(float) max_area;
+    params.maxArea             = 300.0; //(float) max_area;
 
     params.minDistBetweenBlobs = 1.0f;
 
@@ -52,11 +52,12 @@ void detect( int, void* )
 
     std::cout << "Found " << keypoints.size() << " blobs" << std::endl;
 
-    drawKeypoints(working, keypoints, working);
-    // drawKeypoints(img, keypoints, marked);
+    // drawKeypoints(working, keypoints, working);
+    drawKeypoints(img, keypoints, marked);
 
     // imwrite("output.png", working);
-    imshow(window_name, working);
+    // imshow(window_name, working);
+    imshow(window_name, marked);
 }
 
 
@@ -69,7 +70,7 @@ int main(int argc, char* argv[])
     // }
 
     // img = imread(argv[1], IMREAD_GRAYSCALE);
-    img = imread("medium_map_fixed.png", IMREAD_GRAYSCALE);
+    img = imread("medium_2_map_fixed.png", IMREAD_GRAYSCALE);
 
     if(! img.data )
     {

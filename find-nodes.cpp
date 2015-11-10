@@ -12,7 +12,7 @@ using namespace std;
 using namespace cv;
 
 #define OUTPUT_IMG "output.png"
-#define OUTPUT_JSON "output.json"
+#define OUTPUT_POINTS "output.points"
 #define WINDOW_NAME "Node Finder"
 
 bool window = false;
@@ -26,19 +26,15 @@ int min_area = 30;
 int max_area = 300;
 
 
-void write_json(vector<KeyPoint> keypoints)
+void write_points(vector<KeyPoint> keypoints)
 {
     ofstream f;
-    f.open(OUTPUT_JSON);
-
-    f << "[" << endl;
+    f.open(OUTPUT_POINTS);
 
     for(KeyPoint k : keypoints)
     {
-        f << "     { 'x':" << k.pt.x << ", 'y':" << k.pt.y << " }," << endl;
+        f << k.pt.x << ", " << k.pt.y << endl;
     }
-
-    f << "]" << endl;
 
     f.close();
 }
@@ -95,8 +91,8 @@ void detect( int, void* )
         imwrite(OUTPUT_IMG, marked);
         // imwrite(OUTPUT_IMG, working);
         std::cout << "Wrote " << OUTPUT_IMG << std::endl;
-        write_json(keypoints);
-        std::cout << "Wrote " << OUTPUT_JSON << std::endl;
+        write_points(keypoints);
+        std::cout << "Wrote " << OUTPUT_POINTS << std::endl;
     }
 }
 

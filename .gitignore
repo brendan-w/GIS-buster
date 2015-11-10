@@ -1,7 +1,7 @@
 
 find-nodes
 output.png
-output.json
+output.points
 
 # Compiled Object files
 *.slo

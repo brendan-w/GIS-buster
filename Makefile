@@ -31,4 +31,4 @@ find-nodes: $(OBJS)
 .PHONY: clean
 clean:
 	rm -f *.a *.o *.so
-	rm -f find-nodes output.png
+	rm -f find-nodes output.png output.points

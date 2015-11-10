@@ -17,6 +17,12 @@ bool window = false;
 Mat img;
 
 
+int lower_threshold = 110;
+int min_area = 35;
+int max_area = 300;
+
+
+
 void detect( int, void* )
 {
     Mat working;
@@ -27,7 +33,7 @@ void detect( int, void* )
     bitwise_not(img, working);
     distanceTransform(working, working, CV_DIST_L2, 3);
     normalize(working, working, 0, 255, NORM_MINMAX, CV_8UC1);
-    threshold(working, working, 110, 255, THRESH_BINARY);
+    threshold(working, working, lower_threshold, 255, THRESH_BINARY);
 
 
     SimpleBlobDetector::Params params;
@@ -40,8 +46,8 @@ void detect( int, void* )
     params.filterByCircularity = true;
     params.minCircularity      = 0.1;
     params.filterByArea        = true;
-    params.minArea             = 35.0; //(float) min_area;
-    params.maxArea             = 300.0; //(float) max_area;
+    params.minArea             = (float) min_area;
+    params.maxArea             = (float) max_area;
 
     params.minDistBetweenBlobs = 1.0f;
 
@@ -54,17 +60,15 @@ void detect( int, void* )
 
     std::cout << "Found " << keypoints.size() << " blobs" << std::endl;
 
-    // drawKeypoints(working, keypoints, working);
-    // imshow(window_name, working);
-
-    drawKeypoints(img, keypoints, marked);
     
     if(window)
     {
-        imshow(WINDOW_NAME, marked);
+        drawKeypoints(working, keypoints, working);
+        imshow(WINDOW_NAME, working);
     }
     else
     {
+        drawKeypoints(img, keypoints, marked);
         imwrite(OUTPUT_FILE, marked);
         std::cout << "Wrote " << OUTPUT_FILE << std::endl;
     }
@@ -104,6 +108,24 @@ int main(int argc, char* argv[])
     if(window)
     {
         namedWindow(WINDOW_NAME, WINDOW_AUTOSIZE);
+
+        createTrackbar("threshold",
+                       WINDOW_NAME,
+                       &lower_threshold,
+                       255,
+                       detect);
+
+        createTrackbar("min area",
+                       WINDOW_NAME,
+                       &min_area,
+                       500,
+                       detect);
+
+        createTrackbar("max area",
+                       WINDOW_NAME,
+                       &max_area,
+                       500,
+                       detect);
     }
 
     //run the initial detection

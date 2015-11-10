@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
     // }
 
     // img = imread(argv[1], IMREAD_GRAYSCALE);
-    img = imread("medium_2_map_fixed.png", IMREAD_GRAYSCALE);
+    img = imread("tests/medium_2_map_fixed.png", IMREAD_GRAYSCALE);
 
     if(! img.data )
     {

@@ -19,16 +19,42 @@ Mat img;
 
 void detect( int, void* )
 {
+    Mat working;
     Mat marked;
 
-    bitwise_not(img, marked);
-    distanceTransform(marked, marked, CV_DIST_L2, 3);
-    normalize(marked, marked, 0.0, 1.0, NORM_MINMAX);
-    threshold(marked, marked, 0.75, 1.0, THRESH_BINARY);
+    bitwise_not(img, working);
+    distanceTransform(working, working, CV_DIST_L2, 3);
+    normalize(working, working, 0, 255, NORM_MINMAX, CV_8UC1);
+    threshold(working, working, 180, 255, THRESH_BINARY);
 
-    std::cout << "Found " << 0 << " blobs" << std::endl;
 
-    imshow(window_name, marked);
+    SimpleBlobDetector::Params params;
+    params.filterByInertia     = false;
+    params.filterByConvexity   = false;
+    //find only black
+    params.filterByColor       = true;
+    params.blobColor           = 0;
+    //look for circles
+    params.filterByCircularity = true;
+    params.minCircularity      = 0.1;
+    //I measured them to be about ~22 pixels in diameter
+    params.filterByArea        = true;
+    params.minArea             = (float) min_area;
+    params.maxArea             = (float) max_area;
+
+    params.minDistBetweenBlobs = 1.0f;
+
+
+    std::cout << "Starting detection..." << std::endl;
+
+    SimpleBlobDetector detector(params);
+    vector<KeyPoint> keypoints;
+    detector.detect(working, keypoints);
+    drawKeypoints(img, keypoints, marked);
+
+    std::cout << "Found " << keypoints.size() << " blobs" << std::endl;
+
+    imshow(window_name, working);
 }
 
 

@@ -25,7 +25,7 @@ void detect( int, void* )
     bitwise_not(img, working);
     distanceTransform(working, working, CV_DIST_L2, 3);
     normalize(working, working, 0, 255, NORM_MINMAX, CV_8UC1);
-    threshold(working, working, 180, 255, THRESH_BINARY);
+    threshold(working, working, 130, 255, THRESH_BINARY);
 
 
     SimpleBlobDetector::Params params;
@@ -36,10 +36,10 @@ void detect( int, void* )
     params.blobColor           = 255;
     //look for circles
     params.filterByCircularity = true;
-    params.minCircularity      = 0.4;
+    params.minCircularity      = 0.1;
     params.filterByArea        = true;
-    params.minArea             = 10.0; //(float) min_area;
-    params.maxArea             = 50.0; //(float) max_area;
+    params.minArea             = 15.0; //(float) min_area;
+    params.maxArea             = 180.0; //(float) max_area;
 
     params.minDistBetweenBlobs = 1.0f;
 
@@ -49,10 +49,13 @@ void detect( int, void* )
     SimpleBlobDetector detector(params);
     vector<KeyPoint> keypoints;
     detector.detect(working, keypoints);
-    drawKeypoints(working, keypoints, working);
 
     std::cout << "Found " << keypoints.size() << " blobs" << std::endl;
 
+    drawKeypoints(working, keypoints, working);
+    // drawKeypoints(img, keypoints, marked);
+
+    // imwrite("output.png", working);
     imshow(window_name, working);
 }
 
@@ -66,7 +69,7 @@ int main(int argc, char* argv[])
     // }
 
     // img = imread(argv[1], IMREAD_GRAYSCALE);
-    img = imread("small_map_fixed.png", IMREAD_GRAYSCALE);
+    img = imread("medium_map_fixed.png", IMREAD_GRAYSCALE);
 
     if(! img.data )
     {
@@ -76,13 +79,13 @@ int main(int argc, char* argv[])
 
     namedWindow(window_name, WINDOW_AUTOSIZE);
 
-    createTrackbar( "min area",
-                    window_name, &min_area,
-                    500, detect );
+    // createTrackbar( "min area",
+    //                 window_name, &min_area,
+    //                 500, detect );
 
-    createTrackbar( "max area",
-                    window_name, &max_area,
-                    500, detect );
+    // createTrackbar( "max area",
+    //                 window_name, &max_area,
+    //                 500, detect );
 
     detect(0, NULL);
 

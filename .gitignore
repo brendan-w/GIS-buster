@@ -1,6 +1,7 @@
 
 find-nodes
 output.png
+output.json
 
 # Compiled Object files
 *.slo

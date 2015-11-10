@@ -4,7 +4,7 @@
 
 
 CXX       = g++
-CXXFLAGS += -Wall -Wextra -pedantic -fPIC -ggdb
+CXXFLAGS += -std=c++11 -Wall -Wextra -pedantic -fPIC -ggdb
 CXXFLAGS += -I.
 LIBS      = -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_features2d
 

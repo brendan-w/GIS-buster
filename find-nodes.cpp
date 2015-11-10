@@ -1,5 +1,7 @@
 
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include <string.h> //strcmp()
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -9,7 +11,8 @@
 using namespace std;
 using namespace cv;
 
-#define OUTPUT_FILE "output.png"
+#define OUTPUT_IMG "output.png"
+#define OUTPUT_JSON "output.json"
 #define WINDOW_NAME "Node Finder"
 
 bool window = false;
@@ -17,10 +20,28 @@ bool window = false;
 Mat img;
 
 
+// a bunch of experimentally determined values...
 int lower_threshold = 90; //needs 110 for smaller tests
 int min_area = 30;
 int max_area = 300;
 
+
+void write_json(vector<KeyPoint> keypoints)
+{
+    ofstream f;
+    f.open(OUTPUT_JSON);
+
+    f << "[" << endl;
+
+    for(KeyPoint k : keypoints)
+    {
+        f << "     { 'x':" << k.pt.x << ", 'y':" << k.pt.y << " }," << endl;
+    }
+
+    f << "]" << endl;
+
+    f.close();
+}
 
 
 void detect( int, void* )
@@ -28,7 +49,6 @@ void detect( int, void* )
     Mat working;
     Mat marked;
 
-    // a bunch of experimentally determined values...
 
     bitwise_not(img, working);
     distanceTransform(working, working, CV_DIST_L2, 3);
@@ -72,9 +92,11 @@ void detect( int, void* )
     }
     else
     {
-        imwrite(OUTPUT_FILE, marked);
-        // imwrite(OUTPUT_FILE, working);
-        std::cout << "Wrote " << OUTPUT_FILE << std::endl;
+        imwrite(OUTPUT_IMG, marked);
+        // imwrite(OUTPUT_IMG, working);
+        std::cout << "Wrote " << OUTPUT_IMG << std::endl;
+        write_json(keypoints);
+        std::cout << "Wrote " << OUTPUT_JSON << std::endl;
     }
 }
 

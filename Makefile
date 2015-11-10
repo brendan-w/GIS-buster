@@ -11,12 +11,7 @@ LIBS      = -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_features2d
 
 # ============================= files and paths =============================
 
-
-INSTALL_PREFIX ?= /usr/local
-
-OBJS += main.o
-
-# HEADERS += 
+OBJS += find-nodes.o
 
 # ============================= main targets =============================
 

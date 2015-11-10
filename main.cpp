@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <string.h> //strcmp()
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -8,11 +9,10 @@
 using namespace std;
 using namespace cv;
 
+#define OUTPUT_FILE "output.png"
+#define WINDOW_NAME "Node Finder"
 
-char* window_name = "Node Finder";
-
-int min_area = 1;
-int max_area = 500;
+bool window = false;
 
 Mat img;
 
@@ -21,6 +21,8 @@ void detect( int, void* )
 {
     Mat working;
     Mat marked;
+
+    // a bunch of experimentally determined values...
 
     bitwise_not(img, working);
     distanceTransform(working, working, CV_DIST_L2, 3);
@@ -38,7 +40,7 @@ void detect( int, void* )
     params.filterByCircularity = true;
     params.minCircularity      = 0.1;
     params.filterByArea        = true;
-    params.minArea             = 15.0; //(float) min_area;
+    params.minArea             = 35.0; //(float) min_area;
     params.maxArea             = 300.0; //(float) max_area;
 
     params.minDistBetweenBlobs = 1.0f;
@@ -53,41 +55,58 @@ void detect( int, void* )
     std::cout << "Found " << keypoints.size() << " blobs" << std::endl;
 
     // drawKeypoints(working, keypoints, working);
-    drawKeypoints(img, keypoints, marked);
-
-    // imwrite("output.png", working);
     // imshow(window_name, working);
-    imshow(window_name, marked);
+
+    drawKeypoints(img, keypoints, marked);
+    
+    if(window)
+    {
+        imshow(WINDOW_NAME, marked);
+    }
+    else
+    {
+        imwrite(OUTPUT_FILE, marked);
+        std::cout << "Wrote " << OUTPUT_FILE << std::endl;
+    }
 }
 
 
 int main(int argc, char* argv[])
 {
-    // if( argc != 2)
-    // {
-    //     cout << "Usage: find_nodes map_fixed.png" << endl;
-    //     return -1;
-    // }
-
-    // img = imread(argv[1], IMREAD_GRAYSCALE);
-    img = imread("tests/medium_2_map_fixed.png", IMREAD_GRAYSCALE);
-
-    if(! img.data )
+    if(argc < 2)
     {
-        cout << "Could not open or find the image" << std::endl ;
+        cout << "Usage: find_nodes [options] <image-file>" << endl << endl;
+        cout << "Options:" << endl << endl;
+        cout << "    --window    displays the marked output in a window. WARNING:" << endl;
+        cout << "                only use this with small sample images.Never use" << endl;
+        cout << "                it with the full map (cuz it's freakin' huge)." << endl;
         return -1;
     }
 
-    namedWindow(window_name, WINDOW_AUTOSIZE);
+    int img_arg = 1; //for the case without --window
 
-    // createTrackbar( "min area",
-    //                 window_name, &min_area,
-    //                 500, detect );
+    if( (argc == 3) && (strcmp(argv[1], "--window") == 0) )
+    {
+        img_arg = 2;
+        window = true;
+    }
 
-    // createTrackbar( "max area",
-    //                 window_name, &max_area,
-    //                 500, detect );
+    cout << "Loading image..." << endl;
+    img = imread(argv[img_arg], IMREAD_GRAYSCALE);
 
+
+    if(! img.data )
+    {
+        cout << "Failed to load image: " << argv[img_arg] << std::endl ;
+        return -1;
+    }
+
+    if(window)
+    {
+        namedWindow(WINDOW_NAME, WINDOW_AUTOSIZE);
+    }
+
+    //run the initial detection
     detect(0, NULL);
 
     waitKey(0);

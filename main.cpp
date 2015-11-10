@@ -44,21 +44,23 @@ void detect( int, void* )
     params.blobColor           = 255;
     //look for circles
     params.filterByCircularity = true;
-    params.minCircularity      = 0.1;
+    params.minCircularity      = 0.3;
     params.filterByArea        = true;
     params.minArea             = (float) min_area;
     params.maxArea             = (float) max_area;
 
     params.minDistBetweenBlobs = 1.0f;
 
-
-    std::cout << "Starting detection..." << std::endl;
+    if(!window)
+    {
+        std::cout << "Starting detection..." << std::endl;
+    }
 
     SimpleBlobDetector detector(params);
     vector<KeyPoint> keypoints;
     detector.detect(working, keypoints);
 
-    std::cout << "Found " << keypoints.size() << " blobs" << std::endl;
+    std::cout << "Found " << keypoints.size() << " nodes" << std::endl;
 
     
     if(window)

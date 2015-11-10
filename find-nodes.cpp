@@ -17,8 +17,8 @@ bool window = false;
 Mat img;
 
 
-int lower_threshold = 110;
-int min_area = 35;
+int lower_threshold = 90; //needs 110 for smaller tests
+int min_area = 30;
 int max_area = 300;
 
 
@@ -62,16 +62,18 @@ void detect( int, void* )
 
     std::cout << "Found " << keypoints.size() << " nodes" << std::endl;
 
-    
+    drawKeypoints(img, keypoints, marked);
+
     if(window)
     {
-        drawKeypoints(working, keypoints, working);
-        imshow(WINDOW_NAME, working);
+        // drawKeypoints(working, keypoints, working);
+        // imshow(WINDOW_NAME, marked);
+        imshow(WINDOW_NAME, working);        
     }
     else
     {
-        drawKeypoints(img, keypoints, marked);
         imwrite(OUTPUT_FILE, marked);
+        // imwrite(OUTPUT_FILE, working);
         std::cout << "Wrote " << OUTPUT_FILE << std::endl;
     }
 }

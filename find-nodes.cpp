@@ -33,7 +33,7 @@ void write_points(vector<KeyPoint> keypoints)
 
     for(KeyPoint k : keypoints)
     {
-        f << k.pt.x << ", " << k.pt.y << endl;
+        f << (int) k.pt.x << ", " << (int) k.pt.y << endl;
     }
 
     f.close();
@@ -84,7 +84,7 @@ void detect( int, void* )
     {
         // drawKeypoints(working, keypoints, working);
         // imshow(WINDOW_NAME, marked);
-        imshow(WINDOW_NAME, working);        
+        imshow(WINDOW_NAME, working);
     }
     else
     {

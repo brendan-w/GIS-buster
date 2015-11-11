@@ -9,18 +9,18 @@ CXXFLAGS += -I.
 LIBS      = -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_features2d
 
 
-# ============================= files and paths =============================
-
-OBJS += find-nodes.o
-
 # ============================= main targets =============================
 
 
 .PHONY: all
-all:find-nodes
+all:find-nodes approve-nodes
 
 
-find-nodes: $(OBJS)
+approve-nodes: approve-nodes.o
+	$(CXX) $^ $(LIBS) -o $@
+
+
+find-nodes: find-nodes.o
 	$(CXX) $^ $(LIBS) -o $@
 
 
@@ -31,4 +31,5 @@ find-nodes: $(OBJS)
 .PHONY: clean
 clean:
 	rm -f *.a *.o *.so
-	rm -f find-nodes output.png output.points
+	rm -f find-nodes approve-nodes
+	rm -f output.png output.points

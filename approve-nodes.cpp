@@ -59,7 +59,16 @@ void read_points()
 
 void display_current_point()
 {
+    KeyPoint p = keypoints[current];
 
+    int x = ((int) p.pt.x) - (WINDOW_X / 2);
+    int y = ((int) p.pt.y) - (WINDOW_Y / 2);
+
+    Rect r(x, y, WINDOW_X, WINDOW_Y);
+
+    Mat cropped = img(r);
+
+    imshow(cropped);
 }
 
 
@@ -77,10 +86,16 @@ int main()
 
     namedWindow(WINDOW_NAME, WINDOW_AUTOSIZE);
 
-    char k;
-    while( (k = waitKey(0)) != 'q' )
+    char k = 0;
+    while((k != 'q') && (current >= keypoints.size()))
     {
-        cout << k << endl;
+        display_current_point();
+        k = waitKey(0);
+
+        //only the delete key will reject a point
+        keypoints[current].class_id = !(k == 127);
+
+        current++;
     }
 
     return 0;

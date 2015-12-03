@@ -42,6 +42,29 @@ def ntuples(lst, n):
     return zip(*[lst[i:]+lst[:i] for i in range(n)])
 
 
+
+def point_to_geo(point):
+    return "[%f, %f]" % (point[0], point[1])
+
+
+def make_geo_line(line, nodes):
+    start = """{ "type": "Feature", "properties": { }, "geometry": { "type": "LineString", "coordinates": [ """
+    end = """ ] } }, """
+
+    coords = []
+
+    coords.append(point_to_geo(line[0]))
+
+    for node in nodes:
+        coords.append(point_to_geo(node))
+
+    coords.append(point_to_geo(line[1]))
+
+    return start + ",".join(coords) + end
+
+
+
+
 def main():
     with open("world_nodes.json", "r") as f:
         nodes = json.loads(f.read())["features"]
@@ -50,8 +73,13 @@ def main():
         lines = json.loads(f.read())["features"]
 
 
-    l = len(lines)
+    output = open("sewers.json", "w")
 
+    output.write("""
+{
+"type": "FeatureCollection",
+"features": [
+    """)
 
     for i, line_string in enumerate(lines):
 
@@ -83,10 +111,23 @@ def main():
                 node = node["geometry"]["coordinates"]
                 dist = dist_to_line(line[0][0], line[0][1], line[1][0], line[1][1], node[0], node[1])
 
+                # is this node on the centerline?
                 if(dist <= distance_on_line):
                     nodes_on_line.append(node)
 
+            # rough sorting, nothing special
+            nodes_on_line = list(sorted(nodes_on_line, key=lambda node: node[0]))
+            nodes_on_line = list(sorted(nodes_on_line, key=lambda node: node[1]))
 
+            print(make_geo_line(line, nodes_on_line))
+
+
+    output.write("""
+]
+}
+    """)
+
+    output.close()
 
 
 
@@ -95,3 +136,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    print("done")

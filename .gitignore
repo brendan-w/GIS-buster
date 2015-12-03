@@ -1,7 +1,6 @@
 
 find-nodes
 approve-nodes
-output.*
 
 # Compiled Object files
 *.slo

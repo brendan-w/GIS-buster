@@ -68,7 +68,7 @@ void display_current_point()
 
     Mat cropped = img(r);
 
-    imshow(cropped);
+    imshow(WINDOW_NAME, cropped);
 }
 
 

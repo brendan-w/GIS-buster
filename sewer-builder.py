@@ -4,6 +4,10 @@ import math
 from vectors import *
 
 
+distance_on_line = 5.0
+
+
+
 def dist_to_line(x1,y1, x2,y2, x3,y3): # x3,y3 is the point
     px = x2-x1
     py = y2-y1
@@ -48,17 +52,39 @@ def main():
 
     l = len(lines)
 
+
     for i, line_string in enumerate(lines):
 
-        print("%d, %d" % (l, i))
+        # print("%d, %d" % (l, i))
         line_points = line_string["geometry"]["coordinates"]
 
+        # iterate through centerline points in pairs
         for line in list(ntuples(line_points, 2))[:-1]:
+
+            ax = line[0][0]
+            ay = line[0][1]
+            bx = line[1][0]
+            by = line[1][1]
+
+            # skip lines that go outside of our bounds
+
+            if((ax < 1396527) or (bx > 1402226)):
+                continue
+            if((bx < 1396527) or (bx > 1402226)):
+                continue
+            if((ay < 1150970) or (by > 1156770)):
+                continue
+            if((by < 1150970) or (by > 1156770)):
+                continue
+
             nodes_on_line = []
 
             for node in nodes:
                 node = node["geometry"]["coordinates"]
                 dist = dist_to_line(line[0][0], line[0][1], line[1][0], line[1][1], node[0], node[1])
+
+                if(dist <= distance_on_line):
+                    nodes_on_line.append(node)
 
 
 

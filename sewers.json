@@ -657,8 +657,7 @@
     { "type": "Feature", "properties": { }, "geometry": { "type": "LineString", "coordinates": [ [1398412.873953, 1151840.554948],[1398445.760538, 1151844.808643],[1398702.747857, 1151849.164855],[1398805.800015, 1151849.718782],[1398929.940130, 1151853.310148] ] } }, 
     { "type": "Feature", "properties": { }, "geometry": { "type": "LineString", "coordinates": [ [1398742.527138, 1155491.459080],[1398737.958882, 1156076.837192] ] } }, 
     { "type": "Feature", "properties": { }, "geometry": { "type": "LineString", "coordinates": [ [1398255.754849, 1151057.297988],[1398488.820001, 1151058.549956] ] } }, 
-    { "type": "Feature", "properties": { }, "geometry": { "type": "LineString", "coordinates": [ [1399972.263843, 1151607.442884],[1400297.892131, 1151593.070852] ] } }, 
-
+    { "type": "Feature", "properties": { }, "geometry": { "type": "LineString", "coordinates": [ [1399972.263843, 1151607.442884],[1400297.892131, 1151593.070852] ] } }
 ]
 }
     

@@ -4,7 +4,7 @@ import math
 from vectors import *
 
 
-distance_on_line = 5.0
+distance_on_line = 8.0 # feet before a node is considered to be on the centerline
 
 
 
@@ -48,8 +48,8 @@ def point_to_geo(point):
 
 
 def make_geo_line(line, nodes):
-    start = """{ "type": "Feature", "properties": { }, "geometry": { "type": "LineString", "coordinates": [ """
-    end = """ ] } }, """
+    start = """    { "type": "Feature", "properties": { }, "geometry": { "type": "LineString", "coordinates": [ """
+    end = """ ] } }, \n"""
 
     coords = []
 
@@ -78,8 +78,7 @@ def main():
     output.write("""
 {
 "type": "FeatureCollection",
-"features": [
-    """)
+"features": [""")
 
     for i, line_string in enumerate(lines):
 
@@ -119,7 +118,7 @@ def main():
             nodes_on_line = list(sorted(nodes_on_line, key=lambda node: node[0]))
             nodes_on_line = list(sorted(nodes_on_line, key=lambda node: node[1]))
 
-            print(make_geo_line(line, nodes_on_line))
+            output.write(make_geo_line(line, nodes_on_line))
 
 
     output.write("""
